@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import React from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import {AuthContext} from "../components/AuthContext"
+import {useHttpClient} from '../components/HttpHook'
+// import { toast } from "react-toastify";
 import { 
   User, 
   Lock, 
@@ -8,18 +12,21 @@ import {
   ArrowRight, 
   BarChart2, 
   Banknote, 
-  Briefcase 
+  Briefcase,
 } from 'lucide-react';
 
-const Login = () => {
-  const navigate = useNavigate();
+const ManagerLoginPage = () => {
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({ 
     username: '', 
     password: '', 
   });
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { login } = useContext(AuthContext);
+
 
   const handleChange = (e) => {
     setFormData({
@@ -34,31 +41,25 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
 
-    setTimeout(async () => {
-      try {
-        if (formData.username && formData.password) {
-          const response = {
-            token: 'sample-token-123456',
-            user: {
-              name: formData.username,
-              role: 'manager'
-            }
-          };
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.user));
-          navigate('/dashboard', { state: { user: response.user } });
-        } else {
-          throw new Error('Invalid credentials');
+    try {
+      const responseData = await sendRequest(
+        "http://localhost:8000/auth/manager",
+        "POST",
+        JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+        {
+          "Content-Type": "application/json",
         }
-      } catch (err) {
-        setError('Invalid username or password');
-      } finally {
-        setIsLoading(false);
-      }
-    }, 800);
+      );
+      login(responseData.user, responseData.token);
+      // console.log(responseData.user);
+      // navigate("/dashboard", { state: { user: responseData.user } });
+
+    } catch (err) {
+    }
   };
 
   return (
@@ -209,4 +210,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ManagerLoginPage;
