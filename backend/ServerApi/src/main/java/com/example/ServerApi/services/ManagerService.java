@@ -12,4 +12,5 @@ public interface ManagerService {
     public Manager getManager(String userName);
     public List<Manager> getAllManager();
     public void deleteManager(String userName);
+    public void changeManager(Manager manager);
 }

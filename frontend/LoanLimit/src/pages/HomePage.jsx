@@ -67,8 +67,8 @@ function HomePage() {
               <Link to="/dashboard" className="btn btn-primary flex items-center justify-center gap-2">
                 Try It Now <FiArrowRight />
               </Link>
-              <Link to="/admin" className="btn btn-secondary flex items-center justify-center gap-2">
-                Admin Login <FiUser />
+              <Link to="/documentation" className="btn btn-secondary flex items-center justify-center gap-2">
+                Documentation <FiFileText />
               </Link>
             </motion.div>
           </div>

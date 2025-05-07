@@ -56,4 +56,18 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PostMapping("/change-manager")
+    public ResponseEntity<?> changeManager(@RequestBody Manager manager){
+        Map<String ,String > response = new HashMap<>();
+        try{
+            managerService.changeManager(manager);
+            response.put("message", "Changed successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }catch (Exception e){
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
 }

@@ -20,25 +20,35 @@ export const useHttpClient = () => {
           headers,
           signal: httpAbortCtrl.signal,
         });
-
-        // console.log("response from our hook" ,response);
+      
         const responseData = await response.json();
-        // console.log("response data from the our hook : " ,responseData);
+      
         activeHttpRequests.current = activeHttpRequests.current.filter(
           (reqCtrl) => reqCtrl !== httpAbortCtrl
         );
-
+      
         if (!response.ok) {
-          throw new Error(responseData.message);
+          throw new Error(responseData.message || 'Request failed!');
         }
-
+      
         setIsLoading(false);
         return responseData;
       } catch (err) {
-        setError(err.message);
+        activeHttpRequests.current = activeHttpRequests.current.filter(
+          (reqCtrl) => reqCtrl !== httpAbortCtrl
+        );
+      
+        if (err.name === 'AbortError') {
+          // Silently ignore aborted requests
+          console.warn('Request aborted');
+          return; // Don't throw or set error
+        }
+      
+        setError(err.message || 'Something went wrong');
         setIsLoading(false);
         throw err;
       }
+      
     },
     []
   );

@@ -25,7 +25,7 @@ function AdminLoginPage() {
         }
       );
       login(responseData.user, responseData.token);
-      navigate('/admin/managers', { state: { user: responseData.user } });
+      // navigate('/admin', { state: { user: responseData.user } });
     } catch (err) {
       // Error already handled in hook
     }

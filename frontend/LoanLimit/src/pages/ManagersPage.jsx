@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiEdit2, FiTrash2, FiPlus, FiX } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiPlus, FiX, FiLogOut } from 'react-icons/fi';
+import { Loader2 } from 'lucide-react';
+import {useHttpClient} from '../components/HttpHook'
+import { AuthContext } from '../components/AuthContext';
 
 function ManagersPage() {
-  const [managers, setManagers] = useState([
-    { id: 1, name: 'John Doe', branch: 'Main Branch', city: 'New York', email: 'john@example.com' },
-    { id: 2, name: 'Jane Smith', branch: 'Downtown', city: 'Los Angeles', email: 'jane@example.com' },
-  ]);
-  
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const [managers, setManagers] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -18,35 +19,147 @@ function ManagersPage() {
     city: '',
     email: '',
   });
+  const [emailError, setEmailError] = useState('');
+  const {logout} = useContext(AuthContext);
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    setManagers([...managers, { id: Date.now(), ...formData }]);
-    setFormData({ name: '', branch: '', city: '', email: '' });
-    setShowAddForm(false);
+  // Fetch managers using hook
+  useEffect(() => {
+    const fetchManagers = async () => {
+      try {
+        const data = await sendRequest(
+          'http://localhost:8000/admin/all-manager',
+          'GET',
+          null,
+          {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          }
+        );
+        console.log(data)
+        setManagers(data);
+      } catch (err) {
+        console.error('Error fetching managers:', err);
+      }
+    };
+
+    fetchManagers();
+  }, [sendRequest]);
+
+  const validateEmail = (email) => {
+    const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return regex.test(email);
   };
 
-  const handleEdit = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
-    setManagers(managers.map(m => 
-      m.id === selectedManager.id ? { ...m, name: formData.name, email: formData.email } : m
-    ));
-    setShowEditForm(false);
+    if (!validateEmail(formData.email)) {
+      setEmailError('Invalid email format');
+      return;
+    }
+    setEmailError('');
+    try {
+      const response = await sendRequest(
+        'http://localhost:8000/admin/create-manager',
+        'POST',
+        JSON.stringify({
+          branchName: formData.branch,
+          city: formData.city,
+          managerName: formData.name,
+          managerMail: formData.email,
+        }),
+        {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      );
+  
+      if (response) {
+        setManagers(prev => [...prev, {
+          branchName: formData.branch,
+          city: formData.city,
+          managerName: formData.name,
+          managerMail: formData.email,
+        }]);
+        setFormData({ name: '', branch: '', city: '', email: '' });
+        setShowAddForm(false); // ✅ Close modal
+      }
+    } catch (err) {
+      console.error('Error adding manager:', err);
+    }
   };
+  
 
-  const handleDelete = () => {
-    setManagers(managers.filter(m => m.id !== selectedManager.id));
-    setShowDeleteConfirm(false);
+  const handleDelete = async () => {
+    try {
+      await sendRequest(
+        `http://localhost:8000/admin/delete-manager/${selectedManager.userName}`,
+        'DELETE',
+        null,
+        {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      );
+      setManagers(managers.filter((m) => m.managerId !== selectedManager.managerId));
+      setShowDeleteConfirm(false);
+    } catch (err) {
+      console.error('Error deleting manager:', err);
+    }
   };
 
   const openEditForm = (manager) => {
+
     setSelectedManager(manager);
     setFormData({ name: manager.name, email: manager.email });
     setShowEditForm(true);
   };
 
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await sendRequest(
+        'http://localhost:8000/admin/change-manager',
+        'POST',
+        JSON.stringify({
+          managerId: selectedManager.managerId,
+          managerName: formData.name,
+          managerMail: formData.email,
+        }),
+        {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        }
+      );
+  
+      if (response) {
+        setManagers(managers.map(m =>
+          m.managerId === selectedManager.managerId
+            ? { ...m, managerName: formData.name, managerMail: formData.email }
+            : m
+        ));
+        setShowEditForm(false); // ✅ Close modal
+      }
+    } catch (err) {
+      console.error('Error updating manager:', err);
+    }
+  };
+  
+
   return (
     <div className="container mx-auto px-4 py-8">
+      {isLoading && (
+        <div className="flex justify-center mb-4">
+          <Loader2 className="animate-spin text-white w-6 h-6" />
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-600 text-white p-3 rounded mb-4">
+          <p>{error}</p>
+          <button onClick={clearError} className="underline text-sm mt-1">
+            Dismiss
+          </button>
+        </div>
+      )}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-white">Branch Managers</h1>
         <button 
@@ -55,10 +168,16 @@ function ManagersPage() {
         >
           <FiPlus className="mr-2" /> Add Manager
         </button>
+        <div className="hidden md:flex items-center space-x-4">
+                    <button className="flex items-center space-x-1 text-neutral-300 hover:text-white transition" onClick={()=>logout()}>
+                      <FiLogOut />
+                      <span>Logout</span>
+                    </button>
+                  </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {managers.map(manager => (
+        {managers?.map(manager => (
           <motion.div 
             key={manager.id}
             className="card"
@@ -66,10 +185,10 @@ function ManagersPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <h3 className="text-xl font-semibold text-white mb-2">{manager.name}</h3>
-            <p className="text-neutral-400 mb-1">Branch: {manager.branch}</p>
+            <h3 className="text-xl font-semibold text-white mb-2">{manager.managerName}</h3>
+            <p className="text-neutral-400 mb-1">Branch: {manager.branchName}</p>
             <p className="text-neutral-400 mb-1">City: {manager.city}</p>
-            <p className="text-neutral-400 mb-4">Email: {manager.email}</p>
+            <p className="text-neutral-400 mb-4">Email: {manager.managerMail}</p>
             
             <div className="flex justify-end space-x-2">
               <button 
@@ -287,7 +406,7 @@ function ManagersPage() {
             >
               <h2 className="text-xl font-semibold text-white mb-4">Confirm Delete</h2>
               <p className="text-neutral-300 mb-6">
-                Are you sure you want to delete {selectedManager?.name}? This action cannot be undone.
+                Are you sure you want to delete {selectedManager?.managerName}? This action cannot be undone.
               </p>
 
               <div className="flex justify-end">

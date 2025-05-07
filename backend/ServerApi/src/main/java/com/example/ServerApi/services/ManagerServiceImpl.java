@@ -116,6 +116,21 @@ public class ManagerServiceImpl implements ManagerService {
         }
     }
 
+    @Override
+    public void changeManager(Manager manager){
+        try{
+            Manager newmanager = managerRepository.findById(manager.getManagerId()).orElseThrow(() -> new UsernameNotFoundException("Manager not found with id  " + manager.getManagerId()));
+            newmanager.setManagerMail(manager.getManagerMail());
+            newmanager.setPassword(generateRandomString(6));
+            newmanager.setManagerName(manager.getManagerName());
+            newmanager.setVerify(false);
+            managerRepository.save(newmanager);
+            sendManagerEmail(newmanager);
+        }catch (Exception e) {
+        throw new RuntimeException(e.getMessage());
+    }
+    }
+
     //    mathod for generating random string of n length
     public static String generateRandomString(int length) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";

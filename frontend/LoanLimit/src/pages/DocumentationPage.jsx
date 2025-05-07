@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import React from 'react'
+
 import { motion } from 'framer-motion'
 import { FiChevronDown, FiChevronRight, FiSearch, FiBook, FiCode, FiFileText, FiInfo } from 'react-icons/fi'
 

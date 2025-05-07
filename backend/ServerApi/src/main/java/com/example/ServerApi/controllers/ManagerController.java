@@ -37,4 +37,5 @@ public class ManagerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
 }
