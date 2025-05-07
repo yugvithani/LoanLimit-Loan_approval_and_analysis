@@ -34,7 +34,6 @@ function ManagersPage() {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           }
         );
-        console.log(data)
         setManagers(data);
       } catch (err) {
         console.error('Error fetching managers:', err);
@@ -179,7 +178,7 @@ function ManagersPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {managers?.map(manager => (
           <motion.div 
-            key={manager.id}
+            key={manager.managerId}
             className="card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -14,6 +14,7 @@ import { AuthContext } from './components/AuthContext'
 import VerifyManagerPage from './pages/VerifyManagerPage'
 import { useHttpClient } from './components/HttpHook'
 import { Loader2 } from 'lucide-react'
+import TermsAndServicesPage from './pages/TermsAndServicesPage'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -24,7 +25,6 @@ function App() {
     setUser(userData);
     setIsAuthenticated(true);
     localStorage.setItem("token", token);
-    console.log(userData)
   }, []);
   const logout = useCallback(() => {
     setUser(null);
@@ -49,7 +49,6 @@ function App() {
             Authorization: `Bearer ${token}`,
           }
         );
-        console.log(response);
         if (response.manager) {
           login(response.manager, token);
         }
@@ -83,6 +82,7 @@ function App() {
               <Route path="approvalstage" element={<DashboardPage />} />
               <Route path="analysis" element={<AnalysisPage />} />
               <Route path="documentation" element={<DocumentationPage />} />
+              <Route path="termsofservice" element={<TermsAndServicesPage/>}/>
               {/* <Route path="settings" element={<SettingsPage/>} /> */}
             </Route>
             <Route path="/admin" element={<ManagersPage />} />

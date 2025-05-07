@@ -98,7 +98,8 @@ function DashboardPage() {
   };
 
   const simulatePrediction = async () => {
-    const apiUrl = "https://hxrh0n2p-5000.inc1.devtunnels.ms/loan-approval-predict";
+    const modelapiUrl = import.meta.env.VITE_MODEL_API_URL;
+
     const requestData = {
       salary: formData.salary,
       person_home_ownership: formData.personHomeOwnership,
@@ -113,7 +114,7 @@ function DashboardPage() {
     };
 
     try {
-      const response = await sendRequest(apiUrl, "POST", JSON.stringify(requestData), {
+      const response = await sendRequest(`${modelapiUrl}/loan-approval-predict`, "POST", JSON.stringify(requestData), {
         "Content-Type": "application/json"
       });
       console.log(response);
@@ -166,7 +167,7 @@ function DashboardPage() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}` // Include auth token in headers
       });
-        setApplications([formData, ...applications]); // Update state with response data
+        setApplications([newApplication, ...applications]); // Update state with response data
         setShowPredictionModal(false);
         resetForm();
     } catch (error) {
@@ -573,7 +574,7 @@ function DashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-700">
                   {filteredApplications.map((app) => (
-                    <tr key={app.id} className="hover:bg-gray-700/50 transition-colors">
+                    <tr key={app.loanId} className="hover:bg-gray-700/50 transition-colors">
                       {/* Loan Number */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">

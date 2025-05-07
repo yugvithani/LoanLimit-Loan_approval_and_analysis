@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
   FiActivity, FiAlertTriangle, FiCheckCircle, FiDollarSign, 
@@ -32,7 +33,8 @@ function AnalysisPage() {
   const [isFormValid, setIsFormValid] = useState(false)
   const [analysisResults, setAnalysisResults] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  
+  const navigate = useNavigate();
+
   // Check if form is valid whenever formData or transactionFile changes
   useEffect(() => {
     const allFieldsFilled = Object.values(formData).every(value => 
@@ -104,8 +106,10 @@ function AnalysisPage() {
       apiFormData.append('InterestRate', formData.interestRate);
       apiFormData.append('file', transactionFile);
   
+      const modelapiUrl = import.meta.env.VITE_MODEL_API_URL;
+
       // Make API call
-      const response = await fetch('https://hxrh0n2p-5000.inc1.devtunnels.ms/analyze', {
+      const response = await fetch(`${modelapiUrl}/analyze`, {
         method: 'POST',
         body: apiFormData,
       });
