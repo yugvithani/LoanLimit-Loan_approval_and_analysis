@@ -144,8 +144,8 @@ function Navbar() {
 
   const navItems = [
     { name: 'Home', path: '/', icon: <FiHome /> },
-    { name: 'Dashboard', path: '/dashboard', icon: <FiBarChart2 /> },
     { name: 'Risk Analysis', path: '/analysis', icon: <FiPieChart /> },
+    { name: 'ApprovalStage', path: '/approvalstage', icon: <FiBarChart2 /> },
     { name: 'Documentation', path: '/documentation', icon: <FiFileText /> },
     // { name: 'Settings', path: '/settings', icon: <FiSettings /> },
   ];
