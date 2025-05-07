@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,6 +17,18 @@ public class AdminController {
 
     public AdminController(ManagerService managerService) {
         this.managerService = managerService;
+    }
+
+    @GetMapping("/all-manager")
+    public ResponseEntity<?> getAllManager(){
+        Map<String ,String > response = new HashMap<>();
+        try {
+            List<Manager> managers = managerService.getAllManager();
+            return ResponseEntity.ok(managers);
+        } catch (Exception e) {
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PostMapping("/create-manager")
@@ -30,6 +43,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
     @DeleteMapping("/delete-manager/{username}")
     public ResponseEntity<?> deleteManager(@PathVariable String username){
         Map<String ,String > response = new HashMap<>();
