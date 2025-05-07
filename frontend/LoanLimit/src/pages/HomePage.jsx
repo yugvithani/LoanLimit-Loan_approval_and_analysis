@@ -14,9 +14,9 @@ function HomePage() {
   }
   
   const stats = [
-    { label: 'Supported Models', value: '15+', icon: 'models' },
-    { label: 'Accuracy Rate', value: '97.4%', icon: 'accuracy' },
-    { label: 'Applications Processed', value: '1.2M+', icon: 'applications' }
+    { label: 'Decision Models', value: '2', icon: 'models' },
+    { label: 'Accuracy Rate', value: '99%', icon: 'accuracy' },
+    { label: 'Dataset Size', value: '10k+', icon: 'applications' }
   ]
 
   return (
@@ -64,7 +64,7 @@ function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <Link to="/dashboard" className="btn btn-primary flex items-center justify-center gap-2">
+              <Link to="/analysis" className="btn btn-primary flex items-center justify-center gap-2">
                 Try It Now <FiArrowRight />
               </Link>
               <Link to="/documentation" className="btn btn-secondary flex items-center justify-center gap-2">
@@ -99,7 +99,7 @@ function HomePage() {
             <FeatureCard 
               icon={<FiBarChart2 className="text-primary-400" size={24} />}
               title="Loan Risk Detection"
-              description="Our ML model analyzes loan application patterns in real-time, providing instant risk identification with confidence scores."
+              description="Our ML model analyzes loan application patterns in real-time, providing instant risk identification of loan repayment with confidence scores."
               ctaText="Start Analysis"
               ctaLink="/analysis"
               delay={0}
@@ -108,28 +108,10 @@ function HomePage() {
             <FeatureCard
               icon={<FiFileText className="text-primary-400" size={24} />}
               title="Application Overview"
-              description="Comprehensive view of all loan applications, their status, risk scores, and approval recommendations."
+              description="Comprehensive view of all loan applications, their status, and approval recommendations."
               ctaText="View Applications"
-              ctaLink="/dashboard"
+              ctaLink="/approvalstage"
               delay={0.1}
-            />
-            
-            <FeatureCard
-              icon={<FiShield className="text-primary-400" size={24} />}
-              title="Security Features"
-              description="End-to-end encryption, real-time fraud detection, and comprehensive security reports for your peace of mind."
-              ctaText="Learn More"
-              ctaLink="/documentation"
-              delay={0.2}
-            />
-            
-            <FeatureCard
-              icon={<FiClock className="text-primary-400" size={24} />}
-              title="Real-time Processing"
-              description="Process loan applications instantly with our high-performance AI system. Get results in seconds, not days."
-              ctaText="See Performance"
-              ctaLink="/documentation"
-              delay={0.3}
             />
           </div>
         </div>
@@ -147,10 +129,9 @@ function HomePage() {
           >
             <h2 className="text-3xl font-bold text-white mb-4">Ready to Transform Your Loan Approval Process?</h2>
             <p className="text-lg text-neutral-300 mb-8 max-w-2xl mx-auto">
-              Join the financial institutions that have increased their approval accuracy by up to 35% 
-              while reducing risk exposure by 42% using LoanLimit.
+            Join financial institutions that have improved approval accuracy and reduced risk exposure using LoanLimit. 
             </p>
-            <Link to="/dashboard" className="btn btn-primary inline-flex items-center justify-center gap-2">
+            <Link to="/analysis" className="btn btn-primary inline-flex items-center justify-center gap-2">
               Get Started Today <FiArrowRight />
             </Link>
           </motion.div>
