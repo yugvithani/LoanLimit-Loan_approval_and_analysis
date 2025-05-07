@@ -49,7 +49,12 @@ function AnalysisPage() {
   }
 
   const downloadSampleFile = () => {
-    // Here you would handle the sample file download
+    const link = document.createElement('a');
+    link.href = '/sample/samplefile.csv'; // path to your fixed file in public folder
+    link.download = 'samplefile.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const resetApplication = () => {

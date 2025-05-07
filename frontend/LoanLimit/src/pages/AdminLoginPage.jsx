@@ -96,6 +96,13 @@ function AdminLoginPage() {
                 'Login'
               )}
             </button>
+
+            {/* Manager Login Link Below Button */}
+            <div className="text-center mt-4 text-sm">
+              <Link to="/" className="text-blue-400 hover:text-blue-500 transition-colors">
+                Login as Manager
+              </Link>
+            </div>
           </form>
         </div>
         <div className="text-center pt-3 text-slate-500 text-sm">

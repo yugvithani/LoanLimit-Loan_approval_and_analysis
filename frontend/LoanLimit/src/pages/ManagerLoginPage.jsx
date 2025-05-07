@@ -68,7 +68,7 @@ const ManagerLoginPage = () => {
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-900 to-slate-800 flex-col justify-center items-center p-12">
         <div className="flex items-center mb-8">
           <BarChart2 size={48} className="text-blue-300 mr-4" />
-          <h1 className="text-4xl font-bold text-white">LoanLimit Admin</h1>
+          <h1 className="text-4xl font-bold text-white">LoanLimit Login</h1>
         </div>
 
         <div className="relative w-full max-w-md h-64 mb-8">
@@ -177,7 +177,7 @@ const ManagerLoginPage = () => {
               </Link>
             </div>
 
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <button 
                 className={`w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-3 px-4 rounded flex items-center justify-center transition-all ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 type="submit"
@@ -192,6 +192,29 @@ const ManagerLoginPage = () => {
                   </>
                 )}
               </button>
+            </div> */}
+
+            <div className="mb-6">
+              <button
+                className={`w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-3 px-4 rounded flex items-center justify-center transition-all ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                ) : (
+                  <>
+                    Access Dashboard
+                    <ArrowRight size={18} className="ml-2" />
+                  </>
+                )}
+              </button>
+
+              <div className="mt-4 text-center">
+                <Link to="/admin" className="text-blue-300 hover:text-blue-200 hover:underline text-sm">
+                  Login as Admin
+                </Link>
+              </div>
             </div>
 
             {/* <div className="flex items-center justify-center">
@@ -202,7 +225,7 @@ const ManagerLoginPage = () => {
           </form>
 
           <div className="text-center text-slate-500 text-sm">
-            <p>© 2025 LoanLimit • All rights reserved • <Link to="/admin">Admin</Link></p>
+            <p>© 2025 LoanLimit • All rights reserved • </p>
           </div>
         </div>
       </div>
