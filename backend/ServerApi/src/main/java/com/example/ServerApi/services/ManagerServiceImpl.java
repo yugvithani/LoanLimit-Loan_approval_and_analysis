@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -92,6 +93,15 @@ public class ManagerServiceImpl implements ManagerService {
             return managerRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("Manager not found"));
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Manager> getAllManager(){
+        try {
+            return managerRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
