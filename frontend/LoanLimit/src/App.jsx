@@ -80,7 +80,7 @@ function App() {
           <>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
-              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="approvalstage" element={<DashboardPage />} />
               <Route path="analysis" element={<AnalysisPage />} />
               <Route path="documentation" element={<DocumentationPage />} />
               {/* <Route path="settings" element={<SettingsPage/>} /> */}
