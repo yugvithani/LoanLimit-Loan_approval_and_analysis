@@ -4,3 +4,4 @@ numpy
 scikit-learn
 lightgbm
 flask_cors
+gunicorn
