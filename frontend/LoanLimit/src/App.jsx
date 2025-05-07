@@ -12,6 +12,7 @@ import ManagerLoginPage from './pages/ManagerLoginPage'
 import { useState } from 'react'
 import { useCallback } from 'react'
 import { AuthContext } from './components/AuthContext'
+import VerifyManagerPage from './pages/VerifyManagerPage'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -47,6 +48,7 @@ function App() {
         ) : (
           <>
             <Route path="/" element={<ManagerLoginPage />} />
+            <Route path="/verify/:username" element={<VerifyManagerPage />} />
             <Route path="/admin" element={<AdminLoginPage />} />
           </>
         )}

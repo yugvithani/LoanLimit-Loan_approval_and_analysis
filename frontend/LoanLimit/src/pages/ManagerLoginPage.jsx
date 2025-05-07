@@ -202,7 +202,7 @@ const ManagerLoginPage = () => {
           </form>
 
           <div className="text-center text-slate-500 text-sm">
-            <p>© 2025 LoanLimit • All rights reserved</p>
+            <p>© 2025 LoanLimit • All rights reserved • <Link to="/admin">Admin</Link></p>
           </div>
         </div>
       </div>
