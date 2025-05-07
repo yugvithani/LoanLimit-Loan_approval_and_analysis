@@ -1,5 +1,6 @@
 package com.example.ServerApi.controllers;
 
+import com.example.ServerApi.entity.Manager;
 import com.example.ServerApi.services.ManagerService;
 import com.example.ServerApi.utils.JwtUtils;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
@@ -61,13 +63,15 @@ public class AuthController {
 
     @PostMapping("/manager")
     public ResponseEntity<?> loginManager(@RequestBody Map<String, String> request){
-        Map<String ,String > response = new HashMap<>();
+        Map<String , Object> response = new HashMap<>();
         try{
             managerService.loginManager(request.get("username"), request.get("password"));
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.get("username"), request.get("password")));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication, request.get("password"));
+            Manager manager = managerService.getManager(request.get("username"));
+            response.put("user", manager);
             response.put("token", jwt);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }catch (Exception e){
