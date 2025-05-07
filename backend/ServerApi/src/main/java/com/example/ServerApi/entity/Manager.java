@@ -1,10 +1,6 @@
 package com.example.ServerApi.entity;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -24,7 +20,11 @@ public class Manager {
     private boolean verify;
     private String role = "ROLE_MANAGER";
 
-    public Manager(int managerId, String branchName, String city, String managerName, String managerMail, String userName, String password, boolean verify) {
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
+    private List<LoanDetails> loans;
+
+
+    public Manager(int managerId, String branchName, String city, String managerName, String managerMail, String userName, String password, boolean verify, List<LoanDetails> loans) {
         this.managerId = managerId;
         this.branchName = branchName;
         this.city = city;
@@ -33,6 +33,7 @@ public class Manager {
         this.userName = userName;
         this.password = password;
         this.verify = verify;
+        this.loans = loans;
     }
 
     public Manager() {}
@@ -106,6 +107,14 @@ public class Manager {
     }
     public String getPassword() {
         return password;
+    }
+
+    public List<LoanDetails> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(List<LoanDetails> loans) {
+        this.loans = loans;
     }
 }
 
