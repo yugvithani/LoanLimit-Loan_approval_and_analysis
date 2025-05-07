@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,7 +38,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public void createManager(Manager manager) {
-        manager.setPassword(passwordEncoder.encode(generateRandomString(6)));
+        manager.setPassword(generateRandomString(6));
         manager.setUserName(manager.getBranchName().toLowerCase()+"-"+manager.getCity().toLowerCase()+"@manager");
         manager.setVerify(false);
 
@@ -59,7 +60,7 @@ public class ManagerServiceImpl implements ManagerService {
     public void verifyManager(String userName, String oldPassword, String newPassword) {
         try{
             Manager newmanager = managerRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("Manager not found with username  " + userName));
-            if(!passwordEncoder.matches(oldPassword, newmanager.getPassword()))
+            if(!Objects.equals(oldPassword, newmanager.getPassword()))
                 throw new Exception("password not match!");
             if(newmanager.isVerify())
                 throw new Exception("already password has been reset");
@@ -85,6 +86,26 @@ public class ManagerServiceImpl implements ManagerService {
         }
     }
 
+    @Override
+    public Manager getManager(String userName){
+        try{
+            return managerRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("Manager not found"));
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteManager(String userName){
+        try {
+            Manager manager = managerRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("Manager not found with username  " + userName));
+            managerRepository.delete(manager);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     //    mathod for generating random string of n length
     public static String generateRandomString(int length) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
@@ -100,21 +121,137 @@ public class ManagerServiceImpl implements ManagerService {
     public void sendManagerEmail(Manager manager)
             throws MessagingException, UnsupportedEncodingException {
         String toAddress = manager.getManagerMail();
-        String fromAddress = "loanlimit9@gmail.com"; //
+        String fromAddress = "loanlimit9@gmail.com";
         String senderName = "LoanLimit";
         String subject = "Your Manager Account Credentials";
+        String username = manager.getUserName();
 
-        // Generate temporary password (Can be replaced with more secure logic)
-
-        String content = "Dear [[name]],<br><br>"
-                + "Your account has been created as a Manager.<br>"
-                + "Here are your credentials:<br><br>"
-                + "<b>Username:</b> [[username]]<br>"
-                + "<b>Temporary Password:</b> [[password]]<br>"
-                + "<br>"
-                + "Please change your password upon first login.<br><br>"
-                + "Thank you,<br>"
-                + "LoanLimit.";
+        // HTML content with styling
+        String content = ""
+                + "<!DOCTYPE html>"
+                + "<html lang='en'>"
+                + "<head>"
+                + "    <meta charset='UTF-8'>"
+                + "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+                + "    <title>Manager Account Created</title>"
+                + "    <style>"
+                + "        body {"
+                + "            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
+                + "            line-height: 1.6;"
+                + "            color: #333333;"
+                + "            max-width: 600px;"
+                + "            margin: 0 auto;"
+                + "            padding: 20px;"
+                + "        }"
+                + "        .email-container {"
+                + "            border: 1px solid #e1e1e1;"
+                + "            border-radius: 5px;"
+                + "            overflow: hidden;"
+                + "            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);"
+                + "        }"
+                + "        .header {"
+                + "            background-color: #4A90E2;"
+                + "            color: white;"
+                + "            padding: 20px;"
+                + "            text-align: center;"
+                + "        }"
+                + "        .content {"
+                + "            padding: 20px 30px;"
+                + "            background-color: #ffffff;"
+                + "        }"
+                + "        .credentials-box {"
+                + "            background-color: #f9f9f9;"
+                + "            border-left: 4px solid #4A90E2;"
+                + "            padding: 15px;"
+                + "            margin: 20px 0;"
+                + "        }"
+                + "        .credential-item {"
+                + "            margin-bottom: 10px;"
+                + "        }"
+                + "        .label {"
+                + "            font-weight: bold;"
+                + "            color: #555555;"
+                + "        }"
+                + "        .value {"
+                + "            font-family: monospace;"
+                + "            background-color: #f1f1f1;"
+                + "            padding: 3px 6px;"
+                + "            border-radius: 3px;"
+                + "        }"
+                + "        .button-container {"
+                + "            text-align: center;"
+                + "            margin: 25px 0 15px;"
+                + "        }"
+                + "        .verify-button {"
+                + "            display: inline-block;"
+                + "            background-color: #4CAF50;"
+                + "            color: white;"
+                + "            padding: 12px 25px;"
+                + "            text-decoration: none;"
+                + "            border-radius: 4px;"
+                + "            font-weight: bold;"
+                + "            text-transform: uppercase;"
+                + "            letter-spacing: 0.5px;"
+                + "            font-size: 14px;"
+                + "            transition: background-color 0.3s;"
+                + "        }"
+                + "        .verify-button:hover {"
+                + "            background-color: #45a049;"
+                + "        }"
+                + "        .footer {"
+                + "            text-align: center;"
+                + "            padding: 15px;"
+                + "            font-size: 12px;"
+                + "            color: #777777;"
+                + "            background-color: #f7f7f7;"
+                + "            border-top: 1px solid #e1e1e1;"
+                + "        }"
+                + "        .warning {"
+                + "            color: #e74c3c;"
+                + "            font-style: italic;"
+                + "            font-size: 13px;"
+                + "            margin-top: 5px;"
+                + "        }"
+                + "        .logo {"
+                + "            font-size: 24px;"
+                + "            font-weight: bold;"
+                + "            letter-spacing: 1px;"
+                + "        }"
+                + "    </style>"
+                + "</head>"
+                + "<body>"
+                + "    <div class='email-container'>"
+                + "        <div class='header'>"
+                + "            <div class='logo'>LOAN LIMIT</div>"
+                + "            <p>Manager Account Credentials</p>"
+                + "        </div>"
+                + "        <div class='content'>"
+                + "            <p>Dear <strong>" + manager.getManagerName() + "</strong>,</p>"
+                + "            <p>Your account has been successfully created as a Manager in our system.</p>"
+                + "            <div class='credentials-box'>"
+                + "                <div class='credential-item'>"
+                + "                    <span class='label'>Username:</span> "
+                + "                    <span class='value'>" + username + "</span>"
+                + "                </div>"
+                + "                <div class='credential-item'>"
+                + "                    <span class='label'>Temporary Password:</span> "
+                + "                    <span class='value'>" + manager.getPassword() + "</span>"
+                + "                </div>"
+                + "                <p class='warning'>Please change your password immediately during your first login.</p>"
+                + "            </div>"
+                + "            <div class='button-container'>"
+                + "                <a href='http://localhost:5173/verify/" + username + "' class='verify-button'>Verify Account</a>"
+                + "            </div>"
+                + "            <p>If you have any questions or need assistance, please contact our support team.</p>"
+                + "            <p>Thank you,<br>The LoanLimit Team</p>"
+                + "        </div>"
+                + "        <div class='footer'>"
+                + "            <p>© 2025 LoanLimit. All rights reserved.</p>"
+                + "            <p>This is an automated message. Please do not reply to this email.</p>"
+                + "        </div>"
+                + "    </div>"
+                + "</body>"
+                + "</html>";
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -122,12 +259,7 @@ public class ManagerServiceImpl implements ManagerService {
         helper.setFrom(fromAddress, senderName);
         helper.setTo(toAddress);
         helper.setSubject(subject);
-
-        content = content.replace("[[name]]", manager.getManagerName());
-        content = content.replace("[[username]]", manager.getUserName());
-        content = content.replace("[[password]]", manager.getPassword()); // Attach temporary password
-
-        helper.setText(content, true);
+        helper.setText(content, true); // Set to true to enable HTML content
 
         javaMailSender.send(message);
     }
