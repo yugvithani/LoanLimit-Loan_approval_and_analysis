@@ -569,6 +569,7 @@ function DashboardPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Loan Term(months)</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Credit Score</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Confident Score (%)</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
@@ -607,6 +608,11 @@ function DashboardPage() {
                       {/* Date */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-400">{app.date}</div>
+                      </td>
+
+                      {/* Confident Score */}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-white">{app.confidenceScore}</div>
                       </td>
 
                       {/* Loan Status */}
