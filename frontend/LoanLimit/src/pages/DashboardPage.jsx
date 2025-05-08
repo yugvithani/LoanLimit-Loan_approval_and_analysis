@@ -159,7 +159,7 @@ function DashboardPage() {
     };
     console.log(newApplication)
   
-    const apiUrl = "http://localhost:8000/loan/create/"+user.managerId;
+    const apiUrl = import.meta.env.VITE_REST_API_URL+"/loan/create/"+user.managerId;
     const authToken = localStorage.getItem("token"); // Retrieve auth token from local storage
   
     try {

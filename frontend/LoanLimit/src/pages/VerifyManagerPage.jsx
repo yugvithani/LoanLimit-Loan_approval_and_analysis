@@ -34,7 +34,7 @@ const VerifyManagerPage = () => {
     try {
         console.log(formData)
       await sendRequest(
-        'http://localhost:8000/auth/manager-verify/'+username,
+        import.meta.env.VITE_REST_API_URL+'/auth/manager-verify/'+username,
         'POST',
         JSON.stringify({
           oldPassword: formData.tempPassword,

@@ -17,7 +17,7 @@ function AdminLoginPage() {
 
     try {
       const responseData = await sendRequest(
-        'http://localhost:8000/auth/admin',
+        import.meta.env.VITE_REST_API_URL+'/auth/admin',
         'POST',
         JSON.stringify({ username, password }),
         {

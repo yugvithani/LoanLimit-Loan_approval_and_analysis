@@ -41,10 +41,10 @@ const ManagerLoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     try {
       const responseData = await sendRequest(
-        "http://localhost:8000/auth/manager",
+        import.meta.env.VITE_REST_API_URL+"/auth/manager",
         "POST",
         JSON.stringify({
           username: formData.username,

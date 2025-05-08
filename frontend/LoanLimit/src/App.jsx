@@ -42,7 +42,7 @@ function App() {
 
       try {
         const response = await sendRequest(
-          'http://localhost:8000/manager/get-manager',
+          import.meta.env.VITE_REST_API_URL + '/manager/get-manager',
           'GET',
           null,
           {

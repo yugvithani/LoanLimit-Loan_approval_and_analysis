@@ -27,7 +27,7 @@ function ManagersPage() {
     const fetchManagers = async () => {
       try {
         const data = await sendRequest(
-          'http://localhost:8000/admin/all-manager',
+          import.meta.env.VITE_REST_API_URL+'/admin/all-manager',
           'GET',
           null,
           {
@@ -57,7 +57,7 @@ function ManagersPage() {
     setEmailError('');
     try {
       const response = await sendRequest(
-        'http://localhost:8000/admin/create-manager',
+        import.meta.env.VITE_REST_API_URL+'/admin/create-manager',
         'POST',
         JSON.stringify({
           branchName: formData.branch,
@@ -90,7 +90,7 @@ function ManagersPage() {
   const handleDelete = async () => {
     try {
       await sendRequest(
-        `http://localhost:8000/admin/delete-manager/${selectedManager.userName}`,
+        `${import.meta.env.VITE_REST_API_URL}/admin/delete-manager/${selectedManager.userName}`,
         'DELETE',
         null,
         {
@@ -117,7 +117,7 @@ function ManagersPage() {
   
     try {
       const response = await sendRequest(
-        'http://localhost:8000/admin/change-manager',
+        import.meta.env.VITE_REST_API_URL+'/admin/change-manager',
         'POST',
         JSON.stringify({
           managerId: selectedManager.managerId,
