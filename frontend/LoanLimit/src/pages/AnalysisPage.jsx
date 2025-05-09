@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
@@ -16,7 +16,7 @@ function AnalysisPage() {
   const [formData, setFormData] = useState({
     age: 30,
     income: 500000,
-    loanAmount: 1000000,
+    loanAmount: 100000,
     creditScore: 750,
     monthsEmployed: 60,
     numCreditLines: 3,
@@ -33,6 +33,7 @@ function AnalysisPage() {
   const [isFormValid, setIsFormValid] = useState(false)
   const [analysisResults, setAnalysisResults] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const fileInputRef = useRef(null)
   const navigate = useNavigate();
 
   // Check if form is valid whenever formData or transactionFile changes
@@ -43,6 +44,42 @@ function AnalysisPage() {
     
     setIsFormValid(allFieldsFilled && transactionFile !== null)
   }, [formData, transactionFile])
+
+
+  useEffect(() => {
+    // Function to fetch and set the file
+    const fetchPreDefinedFile = async () => {
+      try {
+        // Path to your file in the public folder
+        const filePath = '/sample/samplefile.csv'; // Adjust this path as needed
+        
+        // Fetch the file
+        const response = await fetch(filePath);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file: ${response.status}`);
+        }
+        
+        // Get the file content as blob
+        const fileBlob = await response.blob();
+        
+        // Create a File object from the blob
+        const file = new File(
+          [fileBlob], 
+          'samplefile.csv', // File name
+          { type: fileBlob.type || 'text/csv' } // MIME type
+        );
+        
+        // Set the file to state
+        setTransactionFile(file);
+      } catch (error) {
+        console.error('Error loading predefined file:', error);
+      }
+    };
+    
+    fetchPreDefinedFile();
+  }, []); 
+
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0]
@@ -62,6 +99,10 @@ function AnalysisPage() {
   const resetApplication = () => {
     setAnalysisResults(null)
     setTransactionFile(null)
+    // Reset the file input element
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
     setFormData({
       age: 30,
       income: 500000,
@@ -171,7 +212,7 @@ function AnalysisPage() {
       <div className="grid grid-cols-1 gap-8">
         {/* File Upload Section */}
         <div className="card">
-          <h2 className="text-xl font-semibold text-white mb-4">Transaction History</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">Transaction History (Sample File already loaded For Demo Purpose)</h2>
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-neutral-300 mb-2">
@@ -180,6 +221,7 @@ function AnalysisPage() {
               <div className="flex items-center gap-4">
                 <label className="flex-1 cursor-pointer bg-neutral-800 border border-neutral-700 rounded-md px-4 py-2 hover:bg-neutral-700 transition-colors">
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept=".csv"
                     className="hidden"
