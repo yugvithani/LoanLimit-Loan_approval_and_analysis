@@ -25,19 +25,19 @@ function DashboardPage() {
 
   // Form state
   const [formData, setFormData] = useState({
-    age: 30,
+    age: 40,
     confidenceScore: 85.5,
-    creditScore: 750,
+    creditScore: 500,
     loanAmount: 500000,
     loanId: 1,
-    loanIntRate: 10.5,
-    loanIntent: "BUSINESS",
+    loanIntRate: 15,
+    loanIntent: "MEDICAL",
     loanNo: 101,
     loanTerm: 24,
-    noOfDependants: 2,
-    personEmpLength: 120,
-    personHomeOwnership: "OWN",
-    salary: 150000,
+    noOfDependants: 1,
+    personEmpLength: 50,
+    personHomeOwnership: "RENT",
+    salary: 1000000,
     status: "APPROVED"
   });
 
@@ -61,16 +61,16 @@ function DashboardPage() {
     const maxLoanNo = Math.max(...applications.map(app => app.loanNo))
     setFormData({
       loanNo: maxLoanNo + 1, // Keep incrementing loan number on reset
-      salary: 100000,
+      salary: 1000000,
       personHomeOwnership: "RENT",
-      creditScore: 700,
-      personEmpLength: 24,
-      loanIntRate: 8.0,
-      loanAmount: 50000,
-      age: 30,
-      loanIntent: "PERSONAL",
-      loanTerm: 12,
-      noOfDependants: 0,
+      creditScore: 500,
+      personEmpLength: 50,
+      loanIntRate: 15.0,
+      loanAmount: 500000,
+      age: 40,
+      loanIntent: "MEDICAL",
+      loanTerm: 24,
+      noOfDependants: 1,
       confidenceScore: 0, // Assuming default value
       status: "REJECTED", // Assuming default status
     });
@@ -117,10 +117,9 @@ function DashboardPage() {
       const response = await sendRequest(`${modelapiUrl}/loan-approval-predict`, "POST", JSON.stringify(requestData), {
         "Content-Type": "application/json"
       });
-      console.log(response);
       return {
         confidence: response.confidence_score.toFixed(2),
-        recommendation: response.confidence_score.toFixed(2) > 50 ? 'APPROVED' : 'REJECTED'
+        recommendation: Number(response.confidence_score.toFixed(2)) > 50 ? 'APPROVED' : 'REJECTED'
       };
     } catch (error) {
       console.error("Error fetching prediction:", error);
@@ -263,7 +262,7 @@ function DashboardPage() {
             {/* Salary */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                Salary (₹)
+                Yearly Salary (₹)
               </label>
               <input
                 type="range"
@@ -346,7 +345,7 @@ function DashboardPage() {
             {/* Interest Rate */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                Interest Rate (%)
+                Interest Rate monthly (%)
               </label>
               <input
                 type="range"
@@ -679,10 +678,10 @@ function DashboardPage() {
 
                 <div className="text-center mt-4">
                   <p className="text-lg">
-                    Model Confidence: <span className="font-bold">{predictionResult.confidence}%</span>
+                    Model Confidence For Approval: <span className="font-bold">{predictionResult.confidence}%</span>
                   </p>
                   <p className="text-sm text-gray-400 mt-1">
-                    The model {predictionResult.recommendation === 'approved' ? 'recommends approval' : 'suggests rejection'} based on the application details.
+                    The model {predictionResult.recommendation === 'APPROVED' ? 'recommends approval' : 'suggests rejection'} based on the application details.
                   </p>
                 </div>
               </div>
