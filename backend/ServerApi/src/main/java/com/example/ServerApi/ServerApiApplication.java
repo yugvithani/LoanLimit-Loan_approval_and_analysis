@@ -8,16 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ServerApiApplication {
 
 	public static void main(String[] args) {
+		Dotenv dotenv = Dotenv.load();
 
-//		System.setProperty("DATABASE_URI", System.getenv("DATABASE_URI"));
-		System.setProperty("DB_HOST", System.getenv("DB_HOST"));
-		System.setProperty("DB_PORT", System.getenv("DB_PORT"));
-		System.setProperty("DB_DATABASE", System.getenv("DB_DATABASE"));
-		System.setProperty("DB_USERNAME", System.getenv("DB_USERNAME"));
-		System.setProperty("DB_PASSWORD", System.getenv("DB_PASSWORD"));
-		System.setProperty("MAIL_ADDRESS", System.getenv("MAIL_ADDRESS"));
-		System.setProperty("MAIL_PASSWORD", System.getenv("MAIL_PASSWORD"));
-		System.setProperty("SECRET_KEY", System.getenv("SECRET_KEY"));
+		System.setProperty("DATABASE_URI", dotenv.get("DATABASE_URI"));
+		System.setProperty("DATABASE_USERNAME", dotenv.get("DATABASE_USERNAME"));
+		System.setProperty("DATABASE_PASSWORD", dotenv.get("DATABASE_PASSWORD"));
+		System.setProperty("MAIL_ADDRESS", dotenv.get("MAIL_ADDRESS"));
+		System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"));
+		System.setProperty("SECRET_KEY", dotenv.get("SECRET_KEY"));
 
 		SpringApplication.run(ServerApiApplication.class, args);
 	}
