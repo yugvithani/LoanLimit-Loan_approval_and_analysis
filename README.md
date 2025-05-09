@@ -22,7 +22,6 @@ Consists of the following pages:
 - **Approval Stage**:
   - Based on input and historical loan data, the system provides a probability (% chance) for loan approval/rejection aligned with the bank's rules.
   - Manager makes the final decision to approve or reject the application.
-- **Documentation**: Handles applicant document management.
 - **Profile**: Manager's profile and account settings.
 - **History**: View past loan application decisions made by the manager.
 
@@ -31,7 +30,7 @@ Consists of the following pages:
 - **Frontend**: React.js
 - **Backend**: Spring Boot (Java)
 - **ML Integration**: Flask (Python) APIs for model-based decision making
-- **Database**: (Specify here if you're using MySQL, PostgreSQL, MongoDB, etc.)
+- **Database**: MySQL (Aiven)
 
 ## 🚀 Live Demo
 
