@@ -36,9 +36,8 @@ Consists of the following pages:
 
 [🔗 Live Project Link](https://loanlimit.vercel.app)  
 
-## 📦 Installation
+## 📦 Prerequisites
 
-### Prerequisites
 Ensure you have the following installed:
 - Node.js and npm
 - Java (for Spring Boot)
