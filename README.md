@@ -36,7 +36,6 @@ Consists of the following pages:
 ## 🚀 Live Demo
 
 [🔗 Live Project Link](https://loanlimit.vercel.app)  
-*(Replace `#` with your actual deployed URL)*
 
 ## 📦 Installation
 
